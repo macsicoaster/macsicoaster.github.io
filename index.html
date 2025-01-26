@@ -12,8 +12,9 @@
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/MarkerCluster.css">
         <link rel="stylesheet" href="css/MarkerCluster.Default.css">
-        <link rel="stylesheet" href="leaflet.fullscreen-master/Control.FullScreen.css" />
-
+        <link rel="stylesheet" href="leaflet.fullscreen-master/Control.FullScreen.css">
+        <link rel="stylesheet" href="Leaflet.MousePosition-master/src/L.Control.MousePosition.css">
+        <link rel="stylesheet" href="Leaflet-MiniMap-3.6.1/dist/Control.MiniMap.min.css">
         <style>
         html, body, #map {
             width: 100%;
@@ -23,7 +24,6 @@
         }
         </style>
         <title>Mapa przemysłu na Śląsku</title>
-        <b><br><center>Mapa przemysłu na Śląsku</center><br></b>
     </head>
     <body>
         <div id="map">
@@ -31,7 +31,6 @@
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
-        <script src="js/multi-style-layer.js"></script>
         <script src="js/leaflet-svg-shape-markers.min.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
@@ -41,20 +40,36 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="js/leaflet.markercluster.js"></script>
-        <script src="data/Slaskie_1.js"></script>
-        <script src="data/Kopalnie_2.js"></script>
-        <script src="data/Obiekty_Przemyslowe_3.js"></script>
-        <script src="data/TerenyPoprzemyslowe_4.js"></script>
-        <script src="data/TerenyPogornicze_5.js"></script>
-        <script src="data/PracujacyWgSekcjiPrzemysl_6.js"></script>
-        <script src="data/wieze_szybow_kopalnianych_7.js"></script>
-        <script src="data/huty_8.js"></script>
-        <script src="data/elektrownie_9.js"></script>
+        <script src="data/Slaskie_3.js"></script>
+        <script src="data/Kopalnie_4.js"></script>
+        <script src="data/Obiekty_Przemyslowe_5.js"></script>
+        <script src="data/TerenyPoprzemyslowe_6.js"></script>
+        <script src="data/TerenyPogornicze_7.js"></script>
+        <script src="data/wieze_szybow_kopalnianych_8.js"></script>
+        <script src="data/huty_9.js"></script>
+        <script src="data/elektrownie_10.js"></script>
         <script src="leaflet.fullscreen-master/Control.FullScreen.js"></script>
+        <script src="Leaflet.MousePosition-master/src/L.Control.MousePosition.js"></script>
+        <script src="Leaflet-MiniMap-3.6.1/dist/Control.MiniMap.min.js"></script>
         <script>
         var map = L.map('map', {
-            zoomControl:false, maxZoom:28, minZoom:1, fullscreenControl: true, fullscreenControlOptions: {position: 'topleft'},
-        }).fitBounds([[50.107862783624526,18.28845911058719],[50.46755121694884,19.248943792903177]]);
+            zoomControl:false, maxZoom:28, minZoom:1, fullscreenControl:true, fullscreenControlOptions: {position: 'topleft'}, 
+        }).fitBounds([[50.25256641652336,18.665612273549467],[50.28877306418108,18.76226054674455]]);
+        L.control.mousePosition({
+            position: 'bottomright',
+            separator: ' : ',        
+            numDigits: 5,            
+            prefix: 'Współrzędne'    
+        }).addTo(map);
+        var miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        });
+
+        var miniMap = new L.Control.MiniMap(miniMapLayer, {
+            toggleDisplay: true,      
+            minimized: false,         
+            position: 'bottomright',  
+        }).addTo(map);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -105,7 +120,33 @@
         });
         layer_ESRISatelliteArcGISWorld_Imagery_0;
         map.addLayer(layer_ESRISatelliteArcGISWorld_Imagery_0);
-        function pop_Slaskie_1(feature, layer) {
+        map.createPane('pane_OSMStandard_1');
+        map.getPane('pane_OSMStandard_1').style.zIndex = 401;
+        var layer_OSMStandard_1 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_1',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_1;
+        map.addLayer(layer_OSMStandard_1);
+        map.createPane('pane_ESRIGraydark_2');
+        map.getPane('pane_ESRIGraydark_2').style.zIndex = 402;
+        var layer_ESRIGraydark_2 = L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_ESRIGraydark_2',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_ESRIGraydark_2;
+        map.addLayer(layer_ESRIGraydark_2);
+        function pop_Slaskie_3(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['gml_id'] !== null ? autolinker.link(feature.properties['gml_id'].toLocaleString()) : '') + '</td>\
@@ -223,9 +264,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Slaskie_1_0() {
+        function style_Slaskie_3_0() {
             return {
-                pane: 'pane_Slaskie_1',
+                pane: 'pane_Slaskie_3',
                 opacity: 1,
                 color: 'rgba(228,26,28,1.0)',
                 dashArray: '',
@@ -236,31 +277,22 @@
                 interactive: false,
             }
         }
-        map.createPane('pane_Slaskie_1');
-        map.getPane('pane_Slaskie_1').style.zIndex = 401;
-        map.getPane('pane_Slaskie_1').style['mix-blend-mode'] = 'normal';
-        var layer_Slaskie_1 = new L.geoJson(json_Slaskie_1, {
+        map.createPane('pane_Slaskie_3');
+        map.getPane('pane_Slaskie_3').style.zIndex = 403;
+        map.getPane('pane_Slaskie_3').style['mix-blend-mode'] = 'normal';
+        var layer_Slaskie_3 = new L.geoJson(json_Slaskie_3, {
             attribution: '',
             interactive: false,
-            dataVar: 'json_Slaskie_1',
-            layerName: 'layer_Slaskie_1',
-            pane: 'pane_Slaskie_1',
-            onEachFeature: pop_Slaskie_1,
-            style: style_Slaskie_1_0,
+            dataVar: 'json_Slaskie_3',
+            layerName: 'layer_Slaskie_3',
+            pane: 'pane_Slaskie_3',
+            onEachFeature: pop_Slaskie_3,
+            style: style_Slaskie_3_0,
         });
-        bounds_group.addLayer(layer_Slaskie_1);
-        map.addLayer(layer_Slaskie_1);
-        function pop_Kopalnie_2(feature, layer) {
+        bounds_group.addLayer(layer_Slaskie_3);
+        map.addLayer(layer_Slaskie_3);
+        function pop_Kopalnie_4(feature, layer) {
             var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['osm_id'] !== null ? autolinker.link(feature.properties['osm_id'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['code'] !== null ? autolinker.link(feature.properties['code'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['fclass'] !== null ? autolinker.link(feature.properties['fclass'].toLocaleString()) : '') + '</td>\
-                    </tr>\
                     <tr>\
                         <td class="visible-with-data" id="name"colspan="2"><strong>name</strong><br />' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
                     </tr>\
@@ -272,9 +304,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Kopalnie_2_0() {
+        function style_Kopalnie_4_0() {
             return {
-                pane: 'pane_Kopalnie_2',
+                pane: 'pane_Kopalnie_4',
                 opacity: 1,
                 color: 'rgba(82,82,82,1.0)',
                 dashArray: '',
@@ -287,46 +319,22 @@
                 interactive: true,
             }
         }
-        function style_Kopalnie_2_1() {
-            return {
-                pane: 'pane_Kopalnie_2',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,0,0,1.0)',
-                interactive: true,
-            }
-        }
-        map.createPane('pane_Kopalnie_2');
-        map.getPane('pane_Kopalnie_2').style.zIndex = 402;
-        map.getPane('pane_Kopalnie_2').style['mix-blend-mode'] = 'normal';
-        var layer_Kopalnie_2 = new L.geoJson.multiStyle(json_Kopalnie_2, {
+        map.createPane('pane_Kopalnie_4');
+        map.getPane('pane_Kopalnie_4').style.zIndex = 404;
+        map.getPane('pane_Kopalnie_4').style['mix-blend-mode'] = 'normal';
+        var layer_Kopalnie_4 = new L.geoJson(json_Kopalnie_4, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Kopalnie_2',
-            layerName: 'layer_Kopalnie_2',
-            pane: 'pane_Kopalnie_2',
-            onEachFeature: pop_Kopalnie_2,
-            styles: [style_Kopalnie_2_0,style_Kopalnie_2_1,]
+            dataVar: 'json_Kopalnie_4',
+            layerName: 'layer_Kopalnie_4',
+            pane: 'pane_Kopalnie_4',
+            onEachFeature: pop_Kopalnie_4,
+            style: style_Kopalnie_4_0,
         });
-        bounds_group.addLayer(layer_Kopalnie_2);
-        map.addLayer(layer_Kopalnie_2);
-        function pop_Obiekty_Przemyslowe_3(feature, layer) {
+        bounds_group.addLayer(layer_Kopalnie_4);
+        map.addLayer(layer_Kopalnie_4);
+        function pop_Obiekty_Przemyslowe_5(feature, layer) {
             var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['osm_id'] !== null ? autolinker.link(feature.properties['osm_id'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['code'] !== null ? autolinker.link(feature.properties['code'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['fclass'] !== null ? autolinker.link(feature.properties['fclass'].toLocaleString()) : '') + '</td>\
-                    </tr>\
                     <tr>\
                         <th scope="row">name</th>\
                         <td class="visible-with-data" id="name">' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
@@ -339,9 +347,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Obiekty_Przemyslowe_3_0() {
+        function style_Obiekty_Przemyslowe_5_0() {
             return {
-                pane: 'pane_Obiekty_Przemyslowe_3',
+                pane: 'pane_Obiekty_Przemyslowe_5',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
                 dashArray: '',
@@ -354,21 +362,21 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_Obiekty_Przemyslowe_3');
-        map.getPane('pane_Obiekty_Przemyslowe_3').style.zIndex = 403;
-        map.getPane('pane_Obiekty_Przemyslowe_3').style['mix-blend-mode'] = 'normal';
-        var layer_Obiekty_Przemyslowe_3 = new L.geoJson(json_Obiekty_Przemyslowe_3, {
+        map.createPane('pane_Obiekty_Przemyslowe_5');
+        map.getPane('pane_Obiekty_Przemyslowe_5').style.zIndex = 405;
+        map.getPane('pane_Obiekty_Przemyslowe_5').style['mix-blend-mode'] = 'normal';
+        var layer_Obiekty_Przemyslowe_5 = new L.geoJson(json_Obiekty_Przemyslowe_5, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Obiekty_Przemyslowe_3',
-            layerName: 'layer_Obiekty_Przemyslowe_3',
-            pane: 'pane_Obiekty_Przemyslowe_3',
-            onEachFeature: pop_Obiekty_Przemyslowe_3,
-            style: style_Obiekty_Przemyslowe_3_0,
+            dataVar: 'json_Obiekty_Przemyslowe_5',
+            layerName: 'layer_Obiekty_Przemyslowe_5',
+            pane: 'pane_Obiekty_Przemyslowe_5',
+            onEachFeature: pop_Obiekty_Przemyslowe_5,
+            style: style_Obiekty_Przemyslowe_5_0,
         });
-        bounds_group.addLayer(layer_Obiekty_Przemyslowe_3);
-        map.addLayer(layer_Obiekty_Przemyslowe_3);
-        function pop_TerenyPoprzemyslowe_4(feature, layer) {
+        bounds_group.addLayer(layer_Obiekty_Przemyslowe_5);
+        map.addLayer(layer_Obiekty_Przemyslowe_5);
+        function pop_TerenyPoprzemyslowe_6(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <th scope="row">powierzchn</th>\
@@ -398,9 +406,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_TerenyPoprzemyslowe_4_0() {
+        function style_TerenyPoprzemyslowe_6_0() {
             return {
-                pane: 'pane_TerenyPoprzemyslowe_4',
+                pane: 'pane_TerenyPoprzemyslowe_6',
                 opacity: 1,
                 color: 'rgba(95,95,95,1.0)',
                 dashArray: '',
@@ -413,21 +421,21 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_TerenyPoprzemyslowe_4');
-        map.getPane('pane_TerenyPoprzemyslowe_4').style.zIndex = 404;
-        map.getPane('pane_TerenyPoprzemyslowe_4').style['mix-blend-mode'] = 'normal';
-        var layer_TerenyPoprzemyslowe_4 = new L.geoJson(json_TerenyPoprzemyslowe_4, {
+        map.createPane('pane_TerenyPoprzemyslowe_6');
+        map.getPane('pane_TerenyPoprzemyslowe_6').style.zIndex = 406;
+        map.getPane('pane_TerenyPoprzemyslowe_6').style['mix-blend-mode'] = 'normal';
+        var layer_TerenyPoprzemyslowe_6 = new L.geoJson(json_TerenyPoprzemyslowe_6, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_TerenyPoprzemyslowe_4',
-            layerName: 'layer_TerenyPoprzemyslowe_4',
-            pane: 'pane_TerenyPoprzemyslowe_4',
-            onEachFeature: pop_TerenyPoprzemyslowe_4,
-            style: style_TerenyPoprzemyslowe_4_0,
+            dataVar: 'json_TerenyPoprzemyslowe_6',
+            layerName: 'layer_TerenyPoprzemyslowe_6',
+            pane: 'pane_TerenyPoprzemyslowe_6',
+            onEachFeature: pop_TerenyPoprzemyslowe_6,
+            style: style_TerenyPoprzemyslowe_6_0,
         });
-        bounds_group.addLayer(layer_TerenyPoprzemyslowe_4);
-        map.addLayer(layer_TerenyPoprzemyslowe_4);
-        function pop_TerenyPogornicze_5(feature, layer) {
+        bounds_group.addLayer(layer_TerenyPoprzemyslowe_6);
+        map.addLayer(layer_TerenyPoprzemyslowe_6);
+        function pop_TerenyPogornicze_7(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <th scope="row">typ_terenu</th>\
@@ -461,9 +469,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_TerenyPogornicze_5_0() {
+        function style_TerenyPogornicze_7_0() {
             return {
-                pane: 'pane_TerenyPogornicze_5',
+                pane: 'pane_TerenyPogornicze_7',
                 opacity: 1,
                 color: 'rgba(110,110,110,1.0)',
                 dashArray: '',
@@ -476,120 +484,21 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_TerenyPogornicze_5');
-        map.getPane('pane_TerenyPogornicze_5').style.zIndex = 405;
-        map.getPane('pane_TerenyPogornicze_5').style['mix-blend-mode'] = 'normal';
-        var layer_TerenyPogornicze_5 = new L.geoJson(json_TerenyPogornicze_5, {
+        map.createPane('pane_TerenyPogornicze_7');
+        map.getPane('pane_TerenyPogornicze_7').style.zIndex = 407;
+        map.getPane('pane_TerenyPogornicze_7').style['mix-blend-mode'] = 'normal';
+        var layer_TerenyPogornicze_7 = new L.geoJson(json_TerenyPogornicze_7, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_TerenyPogornicze_5',
-            layerName: 'layer_TerenyPogornicze_5',
-            pane: 'pane_TerenyPogornicze_5',
-            onEachFeature: pop_TerenyPogornicze_5,
-            style: style_TerenyPogornicze_5_0,
+            dataVar: 'json_TerenyPogornicze_7',
+            layerName: 'layer_TerenyPogornicze_7',
+            pane: 'pane_TerenyPogornicze_7',
+            onEachFeature: pop_TerenyPogornicze_7,
+            style: style_TerenyPogornicze_7_0,
         });
-        bounds_group.addLayer(layer_TerenyPogornicze_5);
-        map.addLayer(layer_TerenyPogornicze_5);
-        function pop_PracujacyWgSekcjiPrzemysl_6(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <th scope="row">Nazwa powiatu</th>\
-                        <td class="visible-with-data" id="nazwa_powiatu">' + (feature.properties['nazwa_powiatu'] !== null ? autolinker.link(feature.properties['nazwa_powiatu'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">przemysł i budownictwo 2021</th>\
-                        <td class="visible-with-data" id="przemysł_i_budownictwo_2021">' + (feature.properties['przemysł_i_budownictwo_2021'] !== null ? autolinker.link(feature.properties['przemysł_i_budownictwo_2021'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_PracujacyWgSekcjiPrzemysl_6_0(feature) {
-            if (feature.properties['przemysł_i_budownictwo_2021'] >= 2477.000000 && feature.properties['przemysł_i_budownictwo_2021'] <= 4735.000000 ) {
-                return {
-                pane: 'pane_PracujacyWgSekcjiPrzemysl_6',
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fillOpacity: 0,
-                interactive: true,
-            }
-            }
-            if (feature.properties['przemysł_i_budownictwo_2021'] >= 4735.000000 && feature.properties['przemysł_i_budownictwo_2021'] <= 10819.000000 ) {
-                return {
-                pane: 'pane_PracujacyWgSekcjiPrzemysl_6',
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fillOpacity: 0,
-                interactive: true,
-            }
-            }
-            if (feature.properties['przemysł_i_budownictwo_2021'] >= 10819.000000 && feature.properties['przemysł_i_budownictwo_2021'] <= 16491.000000 ) {
-                return {
-                pane: 'pane_PracujacyWgSekcjiPrzemysl_6',
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fillOpacity: 0,
-                interactive: true,
-            }
-            }
-            if (feature.properties['przemysł_i_budownictwo_2021'] >= 16491.000000 && feature.properties['przemysł_i_budownictwo_2021'] <= 27384.000000 ) {
-                return {
-                pane: 'pane_PracujacyWgSekcjiPrzemysl_6',
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fillOpacity: 0,
-                interactive: true,
-            }
-            }
-            if (feature.properties['przemysł_i_budownictwo_2021'] >= 27384.000000 && feature.properties['przemysł_i_budownictwo_2021'] <= 33625.000000 ) {
-                return {
-                pane: 'pane_PracujacyWgSekcjiPrzemysl_6',
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fillOpacity: 0,
-                interactive: true,
-            }
-            }
-        }
-        map.createPane('pane_PracujacyWgSekcjiPrzemysl_6');
-        map.getPane('pane_PracujacyWgSekcjiPrzemysl_6').style.zIndex = 406;
-        map.getPane('pane_PracujacyWgSekcjiPrzemysl_6').style['mix-blend-mode'] = 'normal';
-        var layer_PracujacyWgSekcjiPrzemysl_6 = new L.geoJson(json_PracujacyWgSekcjiPrzemysl_6, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json_PracujacyWgSekcjiPrzemysl_6',
-            layerName: 'layer_PracujacyWgSekcjiPrzemysl_6',
-            pane: 'pane_PracujacyWgSekcjiPrzemysl_6',
-            onEachFeature: pop_PracujacyWgSekcjiPrzemysl_6,
-            style: style_PracujacyWgSekcjiPrzemysl_6_0,
-        });
-        bounds_group.addLayer(layer_PracujacyWgSekcjiPrzemysl_6);
-        map.addLayer(layer_PracujacyWgSekcjiPrzemysl_6);
-        function pop_wieze_szybow_kopalnianych_7(feature, layer) {
+        bounds_group.addLayer(layer_TerenyPogornicze_7);
+        map.addLayer(layer_TerenyPogornicze_7);
+        function pop_wieze_szybow_kopalnianych_8(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <th scope="row">UWAGI</th>\
@@ -615,11 +524,11 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_wieze_szybow_kopalnianych_7_0() {
+        function style_wieze_szybow_kopalnianych_8_0() {
             return {
-                pane: 'pane_wieze_szybow_kopalnianych_7',
+                pane: 'pane_wieze_szybow_kopalnianych_8',
                 shape: 'diamond',
-                radius: 5.999999999999998,
+                radius: 6.0,
                 opacity: 1,
                 color: 'rgba(128,17,25,1.0)',
                 dashArray: '',
@@ -632,31 +541,31 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_wieze_szybow_kopalnianych_7');
-        map.getPane('pane_wieze_szybow_kopalnianych_7').style.zIndex = 407;
-        map.getPane('pane_wieze_szybow_kopalnianych_7').style['mix-blend-mode'] = 'normal';
-        var layer_wieze_szybow_kopalnianych_7 = new L.geoJson(json_wieze_szybow_kopalnianych_7, {
+        map.createPane('pane_wieze_szybow_kopalnianych_8');
+        map.getPane('pane_wieze_szybow_kopalnianych_8').style.zIndex = 408;
+        map.getPane('pane_wieze_szybow_kopalnianych_8').style['mix-blend-mode'] = 'normal';
+        var layer_wieze_szybow_kopalnianych_8 = new L.geoJson(json_wieze_szybow_kopalnianych_8, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_wieze_szybow_kopalnianych_7',
-            layerName: 'layer_wieze_szybow_kopalnianych_7',
-            pane: 'pane_wieze_szybow_kopalnianych_7',
-            onEachFeature: pop_wieze_szybow_kopalnianych_7,
+            dataVar: 'json_wieze_szybow_kopalnianych_8',
+            layerName: 'layer_wieze_szybow_kopalnianych_8',
+            pane: 'pane_wieze_szybow_kopalnianych_8',
+            onEachFeature: pop_wieze_szybow_kopalnianych_8,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.shapeMarker(latlng, style_wieze_szybow_kopalnianych_7_0(feature));
+                return L.shapeMarker(latlng, style_wieze_szybow_kopalnianych_8_0(feature));
             },
         });
-        var cluster_wieze_szybow_kopalnianych_7 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+        var cluster_wieze_szybow_kopalnianych_8 = new L.MarkerClusterGroup({showCoverageOnHover: false,
             spiderfyDistanceMultiplier: 2});
-        cluster_wieze_szybow_kopalnianych_7.addLayer(layer_wieze_szybow_kopalnianych_7);
+        cluster_wieze_szybow_kopalnianych_8.addLayer(layer_wieze_szybow_kopalnianych_8);
 
-        bounds_group.addLayer(layer_wieze_szybow_kopalnianych_7);
-        cluster_wieze_szybow_kopalnianych_7.addTo(map);
-        function pop_huty_8(feature, layer) {
+        bounds_group.addLayer(layer_wieze_szybow_kopalnianych_8);
+        cluster_wieze_szybow_kopalnianych_8.addTo(map);
+        function pop_huty_9(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <th scope="row">INFO_DODAT</th>\
@@ -676,9 +585,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_huty_8_0() {
+        function style_huty_9_0() {
             return {
-                pane: 'pane_huty_8',
+                pane: 'pane_huty_9',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
                 dashArray: '',
@@ -691,21 +600,21 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_huty_8');
-        map.getPane('pane_huty_8').style.zIndex = 408;
-        map.getPane('pane_huty_8').style['mix-blend-mode'] = 'normal';
-        var layer_huty_8 = new L.geoJson(json_huty_8, {
+        map.createPane('pane_huty_9');
+        map.getPane('pane_huty_9').style.zIndex = 409;
+        map.getPane('pane_huty_9').style['mix-blend-mode'] = 'normal';
+        var layer_huty_9 = new L.geoJson(json_huty_9, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_huty_8',
-            layerName: 'layer_huty_8',
-            pane: 'pane_huty_8',
-            onEachFeature: pop_huty_8,
-            style: style_huty_8_0,
+            dataVar: 'json_huty_9',
+            layerName: 'layer_huty_9',
+            pane: 'pane_huty_9',
+            onEachFeature: pop_huty_9,
+            style: style_huty_9_0,
         });
-        bounds_group.addLayer(layer_huty_8);
-        map.addLayer(layer_huty_8);
-        function pop_elektrownie_9(feature, layer) {
+        bounds_group.addLayer(layer_huty_9);
+        map.addLayer(layer_huty_9);
+        function pop_elektrownie_10(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td class="visible-with-data" id="RODZAJ"colspan="2"><strong>RODZAJ</strong><br />' + (feature.properties['RODZAJ'] !== null ? autolinker.link(feature.properties['RODZAJ'].toLocaleString()) : '') + '</td>\
@@ -724,9 +633,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_elektrownie_9_0() {
+        function style_elektrownie_10_0() {
             return {
-                pane: 'pane_elektrownie_9',
+                pane: 'pane_elektrownie_10',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
                 dashArray: '',
@@ -739,30 +648,31 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_elektrownie_9');
-        map.getPane('pane_elektrownie_9').style.zIndex = 409;
-        map.getPane('pane_elektrownie_9').style['mix-blend-mode'] = 'normal';
-        var layer_elektrownie_9 = new L.geoJson(json_elektrownie_9, {
+        map.createPane('pane_elektrownie_10');
+        map.getPane('pane_elektrownie_10').style.zIndex = 410;
+        map.getPane('pane_elektrownie_10').style['mix-blend-mode'] = 'normal';
+        var layer_elektrownie_10 = new L.geoJson(json_elektrownie_10, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_elektrownie_9',
-            layerName: 'layer_elektrownie_9',
-            pane: 'pane_elektrownie_9',
-            onEachFeature: pop_elektrownie_9,
-            style: style_elektrownie_9_0,
+            dataVar: 'json_elektrownie_10',
+            layerName: 'layer_elektrownie_10',
+            pane: 'pane_elektrownie_10',
+            onEachFeature: pop_elektrownie_10,
+            style: style_elektrownie_10_0,
         });
-        bounds_group.addLayer(layer_elektrownie_9);
-        map.addLayer(layer_elektrownie_9);
+        bounds_group.addLayer(layer_elektrownie_10);
+        map.addLayer(layer_elektrownie_10);
         var overlaysTree = [
-            {label: '<img src="legend/elektrownie_9.png" /> elektrownie', layer: layer_elektrownie_9},
-            {label: '<img src="legend/huty_8.png" /> huty', layer: layer_huty_8},
-            {label: '<img src="legend/wieze_szybow_kopalnianych_7.png" /> wieze_szybow_kopalnianych', layer: cluster_wieze_szybow_kopalnianych_7},
-            {label: 'PracujacyWgSekcjiPrzemysl<br /><table><tr><td style="text-align: center;"><img src="legend/PracujacyWgSekcjiPrzemysl_6_247747350.png" /></td><td>2477 - 4735</td></tr><tr><td style="text-align: center;"><img src="legend/PracujacyWgSekcjiPrzemysl_6_4735108191.png" /></td><td>4735 - 10819</td></tr><tr><td style="text-align: center;"><img src="legend/PracujacyWgSekcjiPrzemysl_6_10819164912.png" /></td><td>10819 - 16491</td></tr><tr><td style="text-align: center;"><img src="legend/PracujacyWgSekcjiPrzemysl_6_16491273843.png" /></td><td>16491 - 27384</td></tr><tr><td style="text-align: center;"><img src="legend/PracujacyWgSekcjiPrzemysl_6_27384336254.png" /></td><td>27384 - 33625</td></tr></table>', layer: layer_PracujacyWgSekcjiPrzemysl_6},
-            {label: '<img src="legend/TerenyPogornicze_5.png" /> Tereny Pogornicze', layer: layer_TerenyPogornicze_5},
-            {label: '<img src="legend/TerenyPoprzemyslowe_4.png" /> TerenyPoprzemyslowe', layer: layer_TerenyPoprzemyslowe_4},
-            {label: '<img src="legend/Obiekty_Przemyslowe_3.png" /> Obiekty_Przemyslowe', layer: layer_Obiekty_Przemyslowe_3},
-            {label: '<img src="legend/Kopalnie_2.png" /> Kopalnie', layer: layer_Kopalnie_2},
-            {label: '<img src="legend/Slaskie_1.png" /> Slaskie', layer: layer_Slaskie_1},
+            {label: '<img src="legend/elektrownie_10.png" /> Elektrownie', layer: layer_elektrownie_10},
+            {label: '<img src="legend/huty_9.png" /> Huty', layer: layer_huty_9},
+            {label: '<img src="legend/wieze_szybow_kopalnianych_8.png" /> Wieze szybów kopalnianych', layer: cluster_wieze_szybow_kopalnianych_8},
+            {label: '<img src="legend/TerenyPogornicze_7.png" /> Tereny pogórnicze', layer: layer_TerenyPogornicze_7},
+            {label: '<img src="legend/TerenyPoprzemyslowe_6.png" /> Tereny poprzemysłowe', layer: layer_TerenyPoprzemyslowe_6},
+            {label: '<img src="legend/Obiekty_Przemyslowe_5.png" /> Obiekty przemysłowe', layer: layer_Obiekty_Przemyslowe_5},
+            {label: '<img src="legend/Kopalnie_4.png" /> Kopalnie', layer: layer_Kopalnie_4},
+            {label: '<img src="legend/Slaskie_3.png" /> Granice województwa', layer: layer_Slaskie_3},
+            {label: "ESRI Gray (dark)", layer: layer_ESRIGraydark_2, radioGroup: 'bm' },
+            {label: "OSM Standard", layer: layer_OSMStandard_1, radioGroup: 'bm' },
             {label: "ESRI Satellite (ArcGIS/World_Imagery)", layer: layer_ESRISatelliteArcGISWorld_Imagery_0, radioGroup: 'bm' },]
         var lay = L.control.layers.tree(null, overlaysTree,{
             //namedToggle: true,
